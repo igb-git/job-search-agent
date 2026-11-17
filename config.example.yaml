@@ -1,0 +1,54 @@
+# Copy to config.yaml and edit. Secrets (tokens, API keys) go in .env, not here.
+
+# Each source in sources.txt is searched once per keyword.
+keywords:
+  - UVM
+  - verilog
+  - RTL
+  - RISC
+
+# Free text, in your own words. The LLM judges every job ONLY against what is
+# written here, so state what you want and what you rule out, and nothing else.
+# Do not write things you do not mean: "open to Asia" is not "requires relocation help".
+profile: |
+  I am a design verification engineer (SystemVerilog, UVM, [N] years of experience).
+  I am looking for [seniority level] verification and RTL design roles.
+  I hold EU citizenship and can work in the EU/EEA and Switzerland.
+  I am willing to relocate and open to roles in the EU/EEA, Switzerland and Asia.
+  I am not interested in jobs in the US, Israel or the UAE.
+  I am not interested in internships, graduate or campus-hire roles.
+
+# Jobs located in these countries are rejected before the LLM sees them.
+# Common US, Israel and UAE cities are recognised automatically.
+blocked_countries:
+  - United States
+  - Israel
+  - United Arab Emirates
+
+# Jobs whose text contains one of these phrases are rejected.
+# Use [] for none. A bare "-" line with no text is an error.
+blocked_keywords: []
+# blocked_keywords:
+#   - security clearance
+#   - ITAR
+
+llm:
+  provider: ollama          # ollama | claude | openai
+  ollama:
+    host: http://localhost:11434
+    model: qwen3:14b        # check the exact name with: ollama list
+  claude:
+    model: claude-haiku-5-5 # a small, cheap model is enough for scoring
+  openai:
+    model: gpt-4o-mini      # check current model names in your OpenAI account
+
+limits:
+  delay_seconds: 3                # pause between downloads from the same site
+  max_jobs_scored_per_run: 50     # the rest wait for the next run
+  score_threshold: 7              # 0-10, only jobs at or above this are sent
+  max_matches_per_message: 10     # most matches sent per run; the rest wait
+  request_timeout_seconds: 30
+
+paths:
+  sources_file: sources.txt
+  database: data/jobs.db

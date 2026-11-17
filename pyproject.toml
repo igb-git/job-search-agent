@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "job-search-agent"
+version = "0.1.0"
+description = "Finds job postings on company career pages, scores them against your profile with an LLM, and sends the best to Telegram."
+requires-python = ">=3.10"
+dependencies = [
+    "httpx",
+    "beautifulsoup4",
+    "lxml",
+    "PyYAML",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+claude = ["anthropic"]
+openai = ["openai"]
+dev = ["pytest"]
+
+[project.scripts]
+job-search-agent = "job_search_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+job_search_agent = ["prompts/*.txt"]

@@ -1,0 +1,14 @@
+# Secrets and personal settings (use the *.example files as templates)
+.env
+config.yaml
+sources.txt
+
+# Runtime data: the job database and any log files
+data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/

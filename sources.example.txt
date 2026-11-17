@@ -1,0 +1,30 @@
+# One source per line. Lines starting with # and blank lines are ignored.
+#
+# HTML sources (the company's search results page is a normal web page):
+#   name | search_url_with_{query} | link_pattern
+#     {query}       is replaced by each keyword from config.yaml
+#     link_pattern  is a regular expression that job posting URLs match,
+#                   taken from a real posting URL
+#
+# API sources (the page is JavaScript-rendered, jobs come from a JSON API):
+#   name | adapter:<adapter_name> | posting_url_with_{id}
+#     adapters available: amd, mediatek, tencent
+#     {id}          is replaced by the job's ID to build the link sent to you
+#
+# Park sources that do not work by putting # in front of the line.
+
+# Teamtailor-style sites: /jobs/<number>-<title>
+Nordic Semiconductor | https://careers.nordicsemi.com/jobs?split_view=true&query={query} | /jobs/\d+-
+SiPearl | https://careers.sipearl.com/jobs?split_view=true&query={query} | /jobs/\d+-
+
+# TalentBrew-style sites: /job/<city>/<title>/<number>/<number>
+# Check the site's robots.txt first: some ask automated tools to avoid search pages.
+Synopsys | https://careers.synopsys.com/search-jobs/{query} | /job/[^/]+/[^/]+/\d+/\d+$
+
+# API sources
+MediaTek | adapter:mediatek | https://careers.mediatek.com/en/jobs/{id}
+AMD | adapter:amd | https://careers.amd.com/careers-home/jobs/{id}
+Tencent | adapter:tencent | https://careers.tencent.com/jobdesc.html?postId={id}
+
+# Example of a parked source:
+# Texas Instruments | https://careers.ti.com/en/sites/CX/jobs?keyword={query} | (JavaScript-rendered, no adapter yet)
