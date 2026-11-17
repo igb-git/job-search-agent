@@ -15,6 +15,16 @@ def create_client(config: LLMConfig) -> LLMClient:
 
         return OllamaClient(config.model, host=config.host or DEFAULT_HOST)
 
+    if config.provider == "claude":
+        from .claude import ClaudeClient
+
+        return ClaudeClient(config.model)
+ 
+    if config.provider == "openai":
+        from .openai  import OpenAIClient
+
+        return OpenAIClient(config.model) 
+
     raise LLMError(
         f"The '{config.provider}' backend is not available yet. "
         "Set llm.provider to 'ollama' in config.yaml for now."
