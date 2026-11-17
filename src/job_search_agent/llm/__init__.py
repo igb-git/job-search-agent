@@ -18,12 +18,12 @@ def create_client(config: LLMConfig) -> LLMClient:
     if config.provider == "claude":
         from .claude import ClaudeClient
 
-        return ClaudeClient(config.model)
+        return ClaudeClient(config.model, config.api_key)
  
     if config.provider == "openai":
         from .openai  import OpenAIClient
 
-        return OpenAIClient(config.model) 
+        return OpenAIClient(config.model, config.api_key) 
 
     raise LLMError(
         f"The '{config.provider}' backend is not available yet. "
