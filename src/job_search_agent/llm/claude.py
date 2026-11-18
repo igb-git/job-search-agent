@@ -16,10 +16,21 @@ MAX_TOKENS = 1024  # the JSON answer is short
 class ClaudeClient(LLMClient):
     provider = "claude"
 
-    def __init__(self, model: str, api_key: str, timeout_seconds: float = 120):
+    def __init__(
+        self,
+        model: str,
+        api_key: str,
+        timeout_seconds: float = 120,
+        workspace_id: str | None = None,
+    ):
+        """workspace_id: only needed when the API key is not tied to a workspace and
+        Anthropic asks for an anthropic-workspace-id header."""
         super().__init__(model)
+        headers = {"anthropic-workspace-id": workspace_id} if workspace_id else None
         # The library already retries rate limits and server errors twice.
-        self._client = anthropic.Anthropic(api_key=api_key, timeout=timeout_seconds)
+        self._client = anthropic.Anthropic(
+            api_key=api_key, timeout=timeout_seconds, default_headers=headers
+        )
 
     def close(self) -> None:
         self._client.close()
@@ -57,7 +68,7 @@ class ClaudeClient(LLMClient):
         except anthropic.APIConnectionError as exc:
             raise LLMError("Cannot reach the Claude API. Check your internet connection.") from exc
         except anthropic.APIStatusError as exc:
-            raise LLMError(f"Claude API error {exc.status_code}: {str(exc)[:200]}") from exc
+            raise LLMError(f"Claude API error {exc.status_code}: {str(exc)[:600]}") from exc
 
         text = "".join(
             block.text for block in response.content if getattr(block, "type", None) == "text"

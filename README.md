@@ -48,6 +48,7 @@ cp sources.example.txt sources.txt
 TELEGRAM_BOT_TOKEN=...
 TELEGRAM_CHAT_ID=...
 ANTHROPIC_API_KEY=       # only if llm.provider is claude
+ANTHROPIC_WORKSPACE_ID=  # only if Anthropic says the key needs a workspace (see Troubleshooting)
 OPENAI_API_KEY=          # only if llm.provider is openai
 OLLAMA_HOST=             # optional, overrides llm.ollama.host
 ```
@@ -175,6 +176,7 @@ The scoring prompt (`src/job_search_agent/prompts/score_job.txt`) tells the mode
 | `Ollama has no model named ...` | Check `ollama list` and set the exact name in `config.yaml`. |
 | A source returns `0 job links` | The company has no matches for that keyword, the link pattern is wrong, or the list is loaded by JavaScript. See "Adding a company". |
 | Scoring stops after 3 failures | The model is probably down. The failed jobs are retried on the next run (up to 3 attempts each). |
+| Claude error: key "is not scoped to a workspace" | Create the API key inside a workspace in the developer console, or set `ANTHROPIC_WORKSPACE_ID` in `.env` to that workspace's ID. |
 | A config error mentions a list | Empty `-` lines under a list are invalid YAML for this project. Use `[]` for an empty list. |
 
 ## Project layout

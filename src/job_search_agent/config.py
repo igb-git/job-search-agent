@@ -28,6 +28,7 @@ class LLMConfig:
     model: str
     host: str | None = None  # only used by ollama
     api_key: str | None = None  # only used by claude / openai
+    workspace_id: str | None = None  # only used by claude, if the key is not tied to a workspace
 
 
 @dataclass(frozen=True)
@@ -130,7 +131,10 @@ def _build_llm(raw: object, errors: list[str]) -> LLMConfig:
     api_key = _clean_secret(os.environ.get(env_name))
     if api_key is None:
         errors.append(f"{env_name} is required in .env when llm.provider is '{provider}'.")
-    return LLMConfig(provider=provider, model=model, api_key=api_key)
+    workspace_id = (
+        _clean_secret(os.environ.get("ANTHROPIC_WORKSPACE_ID")) if provider == "claude" else None
+    )
+    return LLMConfig(provider=provider, model=model, api_key=api_key, workspace_id=workspace_id)
 
 
 def load_config(

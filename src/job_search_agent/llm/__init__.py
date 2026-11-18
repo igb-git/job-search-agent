@@ -20,7 +20,9 @@ def create_client(config: LLMConfig) -> LLMClient:
             from .claude import ClaudeClient
         except ImportError:
             raise LLMError(_missing_package("anthropic", "claude")) from None
-        return ClaudeClient(config.model, api_key=config.api_key or "")
+        return ClaudeClient(
+            config.model, api_key=config.api_key or "", workspace_id=config.workspace_id
+        )
 
     if config.provider == "openai":
         try:
