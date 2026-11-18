@@ -24,26 +24,19 @@ class ClaudeClient(LLMClient):
     def close(self) -> None:
         self._client.close()
 
-    def _create(self, system: str, prompt: str, with_temperature: bool):
-        params: dict = {
-            "model": self.model,
-            "max_tokens": MAX_TOKENS,
-            "system": system,
-            "messages": [{"role": "user", "content": prompt}],
-        }
-        if with_temperature:
-            params["temperature"] = 0
-        return self._client.messages.create(**params)
+    def _create(self, system: str, prompt: str):
+        # No temperature setting: recent versions of the library, and the newest
+        # models, do not accept one. A plain request works with every model.
+        return self._client.messages.create(
+            model=self.model,
+            max_tokens=MAX_TOKENS,
+            system=system,
+            messages=[{"role": "user", "content": prompt}],
+        )
 
     def complete(self, system: str, prompt: str) -> str:
         try:
-            try:
-                response = self._create(system, prompt, with_temperature=True)
-            except anthropic.BadRequestError as exc:
-                # Some models do not accept a temperature setting. Retry without it.
-                if "temperature" not in str(exc).lower():
-                    raise
-                response = self._create(system, prompt, with_temperature=False)
+            response = self._create(system, prompt)
         except anthropic.AuthenticationError as exc:
             raise LLMError(
                 "Claude rejected the API key. Check ANTHROPIC_API_KEY in .env."

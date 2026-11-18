@@ -16,16 +16,24 @@ def create_client(config: LLMConfig) -> LLMClient:
         return OllamaClient(config.model, host=config.host or DEFAULT_HOST)
 
     if config.provider == "claude":
-        from .claude import ClaudeClient
+        try:
+            from .claude import ClaudeClient
+        except ImportError:
+            raise LLMError(_missing_package("anthropic", "claude")) from None
+        return ClaudeClient(config.model, api_key=config.api_key or "")
 
-        return ClaudeClient(config.model, config.api_key)
- 
     if config.provider == "openai":
-        from .openai  import OpenAIClient
+        try:
+            from .openai import OpenAIClient
+        except ImportError:
+            raise LLMError(_missing_package("openai", "openai")) from None
+        return OpenAIClient(config.model, api_key=config.api_key or "")
 
-        return OpenAIClient(config.model, config.api_key) 
+    raise LLMError(f"Unknown LLM provider '{config.provider}'.")
 
-    raise LLMError(
-        f"The '{config.provider}' backend is not available yet. "
-        "Set llm.provider to 'ollama' in config.yaml for now."
+
+def _missing_package(package: str, extra: str) -> str:
+    return (
+        f"The '{package}' library is not installed. "
+        f"Install it with: pip install -e \".[{extra}]\""
     )
