@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Callable
 
 from ..fetcher import Fetcher
-from . import amd, mediatek, tencent
+from . import amd, mediatek, realtek, tencent
 from .base import AdapterError, ApiJob, job_text
 
 Adapter = Callable[[Fetcher, str], list[ApiJob]]
@@ -17,6 +17,7 @@ Adapter = Callable[[Fetcher, str], list[ApiJob]]
 ADAPTERS: dict[str, Adapter] = {
     "amd": amd.search,
     "mediatek": mediatek.search,
+    "realtek": realtek.search,
     "tencent": tencent.search,
 }
 

@@ -90,7 +90,13 @@ class Fetcher:
                 return min(float(header), MAX_RETRY_WAIT_SECONDS)
         return min(2.0**attempt, MAX_RETRY_WAIT_SECONDS)
 
-    def fetch(self, url: str, headers: dict[str, str] | None = None) -> FetchResult:
+    def fetch(
+        self,
+        url: str,
+        headers: dict[str, str] | None = None,
+        method: str = "GET",
+        data: dict[str, str] | None = None,
+    ) -> FetchResult:
         """Download a page, retrying temporary failures. Raises FetchError otherwise."""
         host = urlsplit(url).netloc.lower()
         last_problem = "unknown error"
@@ -99,7 +105,12 @@ class Fetcher:
             self._wait_for_turn(host)
             response: httpx.Response | None = None
             try:
-                response = self._client.get(url, headers=headers)
+                if method.upper() == "GET":
+                    response = self._client.get(url, headers=headers)
+                elif method.upper() == "POST":
+                    response = self._client.post(url, headers=headers, data=data)
+                else:
+                    raise ValueError(f"Unsupported HTTP method: {method}")
             except httpx.UnsupportedProtocol as exc:
                 raise FetchError(url, f"unsupported URL: {exc}") from exc
             except httpx.InvalidURL as exc:

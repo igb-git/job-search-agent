@@ -104,7 +104,9 @@ name | search_url_with_{query} | link_pattern
 name | adapter:<adapter_name> | posting_url_with_{id}
 ```
 
-Adapters included: `amd`, `mediatek`, `tencent`. `{id}` is replaced with the job's ID to build the link sent to you. See "Adding a company" below for how to recognise and add one.
+Adapters included: `amd`, `mediatek`, `realtek`, `tencent`. `{id}` is replaced with the job's ID to build the link sent to you. See "Adding a company" below for how to recognise and add one.
+
+**Note:** Some API sources (like Realtek) may return job data in a different language. Check the results and consider blocking unwanted languages in your profile if needed.
 
 Lines starting with `#` are ignored, so park broken sources with a `#`.
 
@@ -197,7 +199,7 @@ src/job_search_agent/
   filters.py          blocked countries and keywords
   matcher.py          builds the scoring prompt, validates the answer
   db.py               SQLite storage
-  adapters/           JSON API sources (amd, mediatek, tencent)
+  adapters/           JSON API sources (amd, mediatek, realtek, tencent)
   llm/                Ollama, Claude and OpenAI backends
   notify/telegram.py  Telegram messages
   prompts/            the scoring prompt, a plain text file you can edit

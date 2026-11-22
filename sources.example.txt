@@ -8,7 +8,7 @@
 #
 # API sources (the page is JavaScript-rendered, jobs come from a JSON API):
 #   name | adapter:<adapter_name> | posting_url_with_{id}
-#     adapters available: amd, mediatek, tencent
+#     adapters available: amd, mediatek, realtek, tencent
 #     {id}          is replaced by the job's ID to build the link sent to you
 #
 # Park sources that do not work by putting # in front of the line.
