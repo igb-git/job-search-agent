@@ -96,6 +96,7 @@ class Fetcher:
         headers: dict[str, str] | None = None,
         method: str = "GET",
         data: dict[str, str] | None = None,
+        json_body: str | None = None,
     ) -> FetchResult:
         """Download a page, retrying temporary failures. Raises FetchError otherwise."""
         host = urlsplit(url).netloc.lower()
@@ -108,7 +109,11 @@ class Fetcher:
                 if method.upper() == "GET":
                     response = self._client.get(url, headers=headers)
                 elif method.upper() == "POST":
-                    response = self._client.post(url, headers=headers, data=data)
+                    if json_body is not None:
+                        # json_body is a JSON string, send as raw content with JSON content-type
+                        response = self._client.post(url, headers=headers, content=json_body.encode("utf-8"))
+                    else:
+                        response = self._client.post(url, headers=headers, data=data)
                 else:
                     raise ValueError(f"Unsupported HTTP method: {method}")
             except httpx.UnsupportedProtocol as exc:

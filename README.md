@@ -104,7 +104,7 @@ name | search_url_with_{query} | link_pattern
 name | adapter:<adapter_name> | posting_url_with_{id}
 ```
 
-Adapters included: `amd`, `mediatek`, `realtek`, `tencent`. `{id}` is replaced with the job's ID to build the link sent to you. See "Adding a company" below for how to recognise and add one.
+Adapters included: `amd`, `mediatek`, `micron`, `realtek`, `tencent`. `{id}` is replaced with the job's ID to build the link sent to you. See "Adding a company" below for how to recognise and add one.
 
 **Note:** Some API sources (like Realtek) may return job data in a different language. Check the results and consider blocking unwanted languages in your profile if needed.
 
